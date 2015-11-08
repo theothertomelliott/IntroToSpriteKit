@@ -47,6 +47,7 @@
 		E2D34CD11BEED2080071A682 = {
 			isa = PBXGroup;
 			children = (
+				E2F58C121BEFBAB80075F807 /* Resources */,
 				E2D34CDC1BEED2080071A682 /* IntroToSpriteKit */,
 				E2D34CDB1BEED2080071A682 /* Products */,
 			);
@@ -85,6 +86,13 @@
 				E2D34CDE1BEED2080071A682 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E2F58C121BEFBAB80075F807 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

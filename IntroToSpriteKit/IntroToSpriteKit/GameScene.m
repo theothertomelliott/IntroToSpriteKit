@@ -10,6 +10,7 @@
 
 @interface GameScene ()
 
+@property (nonatomic) SKLabelNode *startLabel;
 @property (nonatomic) SKSpriteNode *pacMan;
 
 @end
@@ -18,15 +19,33 @@
 
 -(void)didMoveToView:(SKView *)view {
     
+    self.startLabel = [SKLabelNode labelNodeWithFontNamed:@"Verdana"];
+    self.startLabel.text = @"Tap to start";
+    self.startLabel.fontSize = 45;
+    self.startLabel.position = CGPointMake(CGRectGetMidX(self.frame),
+                                   CGRectGetMidY(self.frame));
+    
+    [self addChild:self.startLabel];
+
+}
+
+- (void) startGame {
+    if(self.pacMan != nil){
+        [self.pacMan removeFromParent];
+        self.pacMan = nil;
+    }
+    
+    self.startLabel.hidden = YES;
+    
     self.pacMan = [SKSpriteNode spriteNodeWithImageNamed:@"PacmanFrame2"];
     self.pacMan.position = CGPointMake(CGRectGetMidX(self.frame),
-                                  CGRectGetMidY(self.frame));
+                                       CGRectGetMidY(self.frame));
     [self addChild:self.pacMan];
     self.pacMan.xScale = 2;
     self.pacMan.yScale = 2;
     
     self.physicsWorld.gravity = CGVectorMake(0.0, -1.0);
-
+    
     self.pacMan.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:self.pacMan.size.width/2];
     self.pacMan.physicsBody.mass = 1.0;
     self.pacMan.physicsBody.dynamic = YES;
@@ -35,26 +54,35 @@
 }
 
 - (void) addWall {
-    SKSpriteNode *topWall = [SKSpriteNode spriteNodeWithImageNamed:@"Topwall"];
-    topWall.xScale = 3;
-    topWall.yScale = 3;
+    
+    CGFloat separation = self.pacMan.size.height * 3;
+    
+    SKSpriteNode *topWall = [SKSpriteNode spriteNodeWithImageNamed:@"Wall"];
+    topWall.xScale = 2;
+    topWall.yScale = -2;
     topWall.position = CGPointMake(CGRectGetWidth(self.frame),
-                                   CGRectGetHeight(self.frame)-topWall.texture.size.height*1.5);
+                                   CGRectGetHeight(self.frame)+separation/2);
     [self addChild:topWall];
     
     SKAction *moveWall = [SKAction moveByX:-10 y:0 duration:0.1];
     [topWall runAction:[SKAction repeatActionForever:moveWall]];
     
-    SKSpriteNode *bottomWall = [SKSpriteNode spriteNodeWithImageNamed:@"Bottomwall"];
-    bottomWall.xScale = 3;
-    bottomWall.yScale = 3;
-    bottomWall.position = CGPointMake(CGRectGetWidth(self.frame),bottomWall.texture.size.height*1.5);
+    SKSpriteNode *bottomWall = [SKSpriteNode spriteNodeWithImageNamed:@"Wall"];
+    bottomWall.xScale = 2;
+    bottomWall.yScale = 2;
+    bottomWall.position = CGPointMake(CGRectGetWidth(self.frame),
+                                      -separation/2);;
     [self addChild:bottomWall];
     
     [bottomWall runAction:[SKAction repeatActionForever:moveWall]];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    if(self.pacMan == nil){
+        [self startGame];
+        return;
+    }
     
     for (UITouch *touch in touches) {
         CGPoint location = [touch locationInNode:self];
