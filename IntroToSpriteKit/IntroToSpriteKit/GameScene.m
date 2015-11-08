@@ -13,6 +13,8 @@
 @property (nonatomic) SKLabelNode *startLabel;
 @property (nonatomic) SKSpriteNode *pacMan;
 
+@property (nonatomic) NSMutableArray<SKSpriteNode *> *walls;
+
 @end
 
 @implementation GameScene
@@ -36,6 +38,8 @@
     if(self.pacMan != nil){
         [self endGame];
     }
+    
+    self.walls = [NSMutableArray array];
     
     self.startLabel.hidden = YES;
     
@@ -63,6 +67,11 @@
     [self removeActionForKey:@"wallKey"];
     [self.pacMan removeFromParent];
     self.pacMan = nil;
+    
+    for (SKSpriteNode *wall in self.walls) {
+        [wall removeFromParent];
+    }
+    self.walls = nil;
 }
 
 - (void) addWall {
@@ -80,6 +89,7 @@
     topWall.physicsBody.dynamic = NO;
     
     [self addChild:topWall];
+    [self.walls addObject:topWall];
     
     SKAction *moveWall = [SKAction moveByX:-10 y:0 duration:0.1];
     [topWall runAction:[SKAction repeatActionForever:moveWall]];
@@ -95,6 +105,7 @@
     bottomWall.physicsBody.dynamic = NO;
     
     [bottomWall runAction:[SKAction repeatActionForever:moveWall]];
+    [self.walls addObject:bottomWall];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
