@@ -93,7 +93,7 @@
 
 - (void) addWall {
     
-    CGFloat separation = self.pacMan.size.height * 3;
+    CGFloat separation = self.pacMan.size.height * 2;
     
     // Top wall
     SKSpriteNode *topWall = [SKSpriteNode spriteNodeWithImageNamed:@"Wall"];
