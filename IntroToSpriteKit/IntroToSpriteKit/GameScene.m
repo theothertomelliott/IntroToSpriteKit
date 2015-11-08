@@ -19,6 +19,9 @@
 
 -(void)didMoveToView:(SKView *)view {
     
+    self.physicsWorld.gravity = CGVectorMake(0.0, -1.0);
+    self.physicsWorld.contactDelegate = self;
+    
     self.startLabel = [SKLabelNode labelNodeWithFontNamed:@"Verdana"];
     self.startLabel.text = @"Tap to start";
     self.startLabel.fontSize = 45;
@@ -31,8 +34,7 @@
 
 - (void) startGame {
     if(self.pacMan != nil){
-        [self.pacMan removeFromParent];
-        self.pacMan = nil;
+        [self endGame];
     }
     
     self.startLabel.hidden = YES;
@@ -42,12 +44,10 @@
                                        CGRectGetMidY(self.frame));
     [self addChild:self.pacMan];
     
-    self.physicsWorld.gravity = CGVectorMake(0.0, -1.0);
-    
     self.pacMan.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:self.pacMan.size.width/2];
     self.pacMan.physicsBody.mass = 1.0;
-    self.pacMan.physicsBody.dynamic = YES;
     
+    self.pacMan.physicsBody.contactTestBitMask = 1;
     
     SKAction *addWall = [SKAction runBlock:^{
         [self addWall];
@@ -55,8 +55,14 @@
     SKAction *pause = [SKAction waitForDuration:5];
     SKAction *addAndPause = [SKAction group:@[addWall, pause]];
     
-    [self runAction:[SKAction repeatActionForever:addAndPause]];
-    
+    [self runAction:[SKAction repeatActionForever:addAndPause] withKey:@"wallKey"];
+}
+
+- (void) endGame {
+    self.startLabel.hidden = NO;
+    [self removeActionForKey:@"wallKey"];
+    [self.pacMan removeFromParent];
+    self.pacMan = nil;
 }
 
 - (void) addWall {
@@ -67,6 +73,12 @@
     topWall.yScale = -1;
     topWall.position = CGPointMake(CGRectGetWidth(self.frame),
                                    CGRectGetHeight(self.frame)+separation/2);
+    
+    topWall.physicsBody = [SKPhysicsBody bodyWithTexture:topWall.texture size:topWall.size];
+    topWall.physicsBody.categoryBitMask = 1;
+    topWall.physicsBody.affectedByGravity = NO;
+    topWall.physicsBody.dynamic = NO;
+    
     [self addChild:topWall];
     
     SKAction *moveWall = [SKAction moveByX:-10 y:0 duration:0.1];
@@ -76,6 +88,11 @@
     bottomWall.position = CGPointMake(CGRectGetWidth(self.frame),
                                       -separation/2);;
     [self addChild:bottomWall];
+    
+    bottomWall.physicsBody = [SKPhysicsBody bodyWithTexture:bottomWall.texture size:bottomWall.size];
+    bottomWall.physicsBody.categoryBitMask = 1;
+    bottomWall.physicsBody.affectedByGravity = NO;
+    bottomWall.physicsBody.dynamic = NO;
     
     [bottomWall runAction:[SKAction repeatActionForever:moveWall]];
 }
@@ -95,6 +112,10 @@
     [self.pacMan runAction:animation];
     
     [self.pacMan.physicsBody applyImpulse:CGVectorMake(0.0, -self.pacMan.physicsBody.velocity.dy + 150)];
+}
+
+- (void)didBeginContact:(SKPhysicsContact *)contact {
+    [self endGame];
 }
 
 -(void)update:(CFTimeInterval)currentTime {
