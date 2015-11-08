@@ -48,7 +48,15 @@
     self.pacMan.physicsBody.mass = 1.0;
     self.pacMan.physicsBody.dynamic = YES;
     
-    [self addWall];
+    
+    SKAction *addWall = [SKAction runBlock:^{
+        [self addWall];
+    }];
+    SKAction *pause = [SKAction waitForDuration:5];
+    SKAction *addAndPause = [SKAction group:@[addWall, pause]];
+    
+    [self runAction:[SKAction repeatActionForever:addAndPause]];
+    
 }
 
 - (void) addWall {
@@ -77,11 +85,6 @@
     if(self.pacMan == nil){
         [self startGame];
         return;
-    }
-    
-    for (UITouch *touch in touches) {
-        CGPoint location = [touch locationInNode:self];
-        NSLog(@"%f,%f",location.x, location.y);
     }
     
     SKTexture *frame1 = [SKTexture textureWithImageNamed:@"PacmanFrame1"];
