@@ -41,8 +41,6 @@
     self.pacMan.position = CGPointMake(CGRectGetMidX(self.frame),
                                        CGRectGetMidY(self.frame));
     [self addChild:self.pacMan];
-    self.pacMan.xScale = 2;
-    self.pacMan.yScale = 2;
     
     self.physicsWorld.gravity = CGVectorMake(0.0, -1.0);
     
@@ -58,8 +56,7 @@
     CGFloat separation = self.pacMan.size.height * 3;
     
     SKSpriteNode *topWall = [SKSpriteNode spriteNodeWithImageNamed:@"Wall"];
-    topWall.xScale = 2;
-    topWall.yScale = -2;
+    topWall.yScale = -1;
     topWall.position = CGPointMake(CGRectGetWidth(self.frame),
                                    CGRectGetHeight(self.frame)+separation/2);
     [self addChild:topWall];
@@ -68,8 +65,6 @@
     [topWall runAction:[SKAction repeatActionForever:moveWall]];
     
     SKSpriteNode *bottomWall = [SKSpriteNode spriteNodeWithImageNamed:@"Wall"];
-    bottomWall.xScale = 2;
-    bottomWall.yScale = 2;
     bottomWall.position = CGPointMake(CGRectGetWidth(self.frame),
                                       -separation/2);;
     [self addChild:bottomWall];
