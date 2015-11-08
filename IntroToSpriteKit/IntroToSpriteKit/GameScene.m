@@ -11,6 +11,10 @@
 @interface GameScene ()
 
 @property (nonatomic) SKLabelNode *startLabel;
+@property (nonatomic) SKLabelNode *scoreLabel;
+
+@property (nonatomic) NSInteger score;
+
 @property (nonatomic) SKSpriteNode *pacMan;
 
 @property (nonatomic) NSMutableArray<SKSpriteNode *> *walls;
@@ -21,7 +25,7 @@
 
 -(void)didMoveToView:(SKView *)view {
     
-    self.physicsWorld.gravity = CGVectorMake(0.0, -1.0);
+    self.physicsWorld.gravity = CGVectorMake(0.0, -2);
     self.physicsWorld.contactDelegate = self;
     
     self.startLabel = [SKLabelNode labelNodeWithFontNamed:@"Verdana"];
@@ -32,6 +36,16 @@
     
     [self addChild:self.startLabel];
 
+    self.scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Verdana"];
+    self.scoreLabel.text = @"Score: 0";
+    self.scoreLabel.fontSize = 24;
+    self.scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
+    self.scoreLabel.position = CGPointMake(20,
+                                           CGRectGetHeight(self.frame) - 50);
+    [self addChild:self.scoreLabel];
+    
+    SKAction *soundAction = [SKAction playSoundFileNamed:@"wakka.mp3" waitForCompletion:YES];
+    
 }
 
 - (void) startGame {
@@ -50,19 +64,22 @@
     
     self.pacMan.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:self.pacMan.size.width/2];
     self.pacMan.physicsBody.mass = 1.0;
-    
-    self.pacMan.physicsBody.contactTestBitMask = 1;
+    self.pacMan.physicsBody.collisionBitMask = 0;
+    self.pacMan.physicsBody.contactTestBitMask = 3;
     
     SKAction *addWall = [SKAction runBlock:^{
         [self addWall];
     }];
     SKAction *pause = [SKAction waitForDuration:5];
-    SKAction *addAndPause = [SKAction group:@[addWall, pause]];
-    
-    [self runAction:[SKAction repeatActionForever:addAndPause] withKey:@"wallKey"];
+    [self runAction:
+        [SKAction repeatActionForever:
+            [SKAction group:@[addWall, pause]]
+        ] withKey:@"wallKey"];
 }
 
 - (void) endGame {
+    self.score = 0;
+    
     self.startLabel.hidden = NO;
     [self removeActionForKey:@"wallKey"];
     [self.pacMan removeFromParent];
@@ -78,34 +95,45 @@
     
     CGFloat separation = self.pacMan.size.height * 3;
     
+    // Top wall
     SKSpriteNode *topWall = [SKSpriteNode spriteNodeWithImageNamed:@"Wall"];
+    topWall.position = CGPointMake(0,
+                                   (topWall.size.height/2 + separation/2));
     topWall.yScale = -1;
-    topWall.position = CGPointMake(CGRectGetWidth(self.frame),
-                                   CGRectGetHeight(self.frame)+separation/2);
     
     topWall.physicsBody = [SKPhysicsBody bodyWithTexture:topWall.texture size:topWall.size];
     topWall.physicsBody.categoryBitMask = 1;
     topWall.physicsBody.affectedByGravity = NO;
     topWall.physicsBody.dynamic = NO;
     
-    [self addChild:topWall];
-    [self.walls addObject:topWall];
-    
-    SKAction *moveWall = [SKAction moveByX:-10 y:0 duration:0.1];
-    [topWall runAction:[SKAction repeatActionForever:moveWall]];
-    
+    // Bottom wall
     SKSpriteNode *bottomWall = [SKSpriteNode spriteNodeWithImageNamed:@"Wall"];
-    bottomWall.position = CGPointMake(CGRectGetWidth(self.frame),
-                                      -separation/2);;
-    [self addChild:bottomWall];
+    bottomWall.position = CGPointMake(0,
+                                      -bottomWall.size.height/2 - separation/2);
     
-    bottomWall.physicsBody = [SKPhysicsBody bodyWithTexture:bottomWall.texture size:bottomWall.size];
-    bottomWall.physicsBody.categoryBitMask = 1;
-    bottomWall.physicsBody.affectedByGravity = NO;
-    bottomWall.physicsBody.dynamic = NO;
+    bottomWall.physicsBody = [topWall.physicsBody copy];
     
-    [bottomWall runAction:[SKAction repeatActionForever:moveWall]];
-    [self.walls addObject:bottomWall];
+    // Score boundary
+    SKSpriteNode *scoreBoundary = [SKSpriteNode spriteNodeWithColor:[UIColor clearColor] size:CGSizeMake(2,CGRectGetHeight(self.frame))];
+    scoreBoundary.position = CGPointMake(topWall.size.width/2, 0);
+    scoreBoundary.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:scoreBoundary.size];
+    scoreBoundary.physicsBody.categoryBitMask = 2;
+    scoreBoundary.physicsBody.affectedByGravity = NO;
+    scoreBoundary.physicsBody.dynamic = NO;
+
+    // Combined wall sprite
+    SKSpriteNode *wall = [SKSpriteNode node];
+    wall.position = CGPointMake(CGRectGetWidth(self.frame) + topWall.size.width/2, CGRectGetMidY(self.frame));
+    [self addChild:wall];
+    
+    [wall addChild:topWall];
+    [wall addChild:bottomWall];
+    [wall addChild:scoreBoundary];
+    
+    [self.walls addObject:wall];
+    SKAction *moveWall = [SKAction moveByX:-10 y:0 duration:0.1];
+    [wall runAction:[SKAction repeatActionForever:moveWall]];
+    
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -128,11 +156,20 @@
 }
 
 - (void)didBeginContact:(SKPhysicsContact *)contact {
-    [self endGame];
+    if(contact.bodyA.categoryBitMask == 1){
+        [self endGame];
+    } else {
+        self.score++;
+    }
 }
 
 -(void)update:(CFTimeInterval)currentTime {
     /* Called before each frame is rendered */
+}
+
+- (void) setScore:(NSInteger)score {
+    _score = score;
+    [self.scoreLabel setText:[NSString stringWithFormat:@"Score: %lu", score]];
 }
 
 @end
