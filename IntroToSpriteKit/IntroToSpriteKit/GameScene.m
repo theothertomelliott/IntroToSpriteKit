@@ -104,6 +104,8 @@
         return;
     }
     
+    [self runAction:[SKAction playSoundFileNamed:@"wakka.mp3" waitForCompletion:YES]];
+    
     SKTexture *frame1 = [SKTexture textureWithImageNamed:@"PacmanFrame1"];
     SKTexture *frame2 = [SKTexture textureWithImageNamed:@"PacmanFrame2"];
     SKTexture *frame3 = [SKTexture textureWithImageNamed:@"PacmanFrame3"];

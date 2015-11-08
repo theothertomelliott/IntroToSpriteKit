@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E29CBC5E1BEFDF77008E8576 /* wakka.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E29CBC5D1BEFDF77008E8576 /* wakka.mp3 */; };
+		E29CBC601BEFDFFD008E8576 /* pacman_death.wav in Resources */ = {isa = PBXBuildFile; fileRef = E29CBC5F1BEFDFFD008E8576 /* pacman_death.wav */; };
+		E29CBC621BEFE01C008E8576 /* pacman_eatfruit.wav in Resources */ = {isa = PBXBuildFile; fileRef = E29CBC611BEFE01C008E8576 /* pacman_eatfruit.wav */; };
 		E2D34CDF1BEED2080071A682 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D34CDE1BEED2080071A682 /* main.m */; };
 		E2D34CE21BEED2080071A682 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D34CE11BEED2080071A682 /* AppDelegate.m */; };
 		E2D34CE51BEED2080071A682 /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D34CE41BEED2080071A682 /* GameScene.m */; };
@@ -18,6 +21,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E29CBC5D1BEFDF77008E8576 /* wakka.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = wakka.mp3; sourceTree = "<group>"; };
+		E29CBC5F1BEFDFFD008E8576 /* pacman_death.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = pacman_death.wav; sourceTree = "<group>"; };
+		E29CBC611BEFE01C008E8576 /* pacman_eatfruit.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = pacman_eatfruit.wav; sourceTree = "<group>"; };
 		E2D34CDA1BEED2080071A682 /* IntroToSpriteKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntroToSpriteKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2D34CDE1BEED2080071A682 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E2D34CE01BEED2080071A682 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -91,6 +97,9 @@
 		E2F58C121BEFBAB80075F807 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E29CBC611BEFE01C008E8576 /* pacman_eatfruit.wav */,
+				E29CBC5F1BEFDFFD008E8576 /* pacman_death.wav */,
+				E29CBC5D1BEFDF77008E8576 /* wakka.mp3 */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -153,8 +162,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2D34CE71BEED2080071A682 /* GameScene.sks in Resources */,
+				E29CBC601BEFDFFD008E8576 /* pacman_death.wav in Resources */,
 				E2D34CF21BEED2080071A682 /* LaunchScreen.storyboard in Resources */,
 				E2D34CEF1BEED2080071A682 /* Assets.xcassets in Resources */,
+				E29CBC5E1BEFDF77008E8576 /* wakka.mp3 in Resources */,
+				E29CBC621BEFE01C008E8576 /* pacman_eatfruit.wav in Resources */,
 				E2D34CED1BEED2080071A682 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
