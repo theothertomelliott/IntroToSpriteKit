@@ -20,7 +20,7 @@
 
 Open **IntroToSpriteKit/IntroToSpriteKit.xcodeproj**
 
-This project contains skeleton code for the following steps, image and audio resources.
+This project contains skeleton code for the following steps along with all the necessary image and audio resources.
 
 **Important:** Before moving on, add the following to the `GameViewController`'s `viewDidLoad` method:
 
@@ -52,6 +52,8 @@ Play the audio *wakka.mp3* along with the animation.
 
 Add an action to create a wall every 5 seconds. A wall will consist of an upper and lower section.
 
+Each wall will perform a regular action to move it to the left.
+
 ## Physics
 
 ### Add physics for gravity and "flapping"
@@ -60,7 +62,7 @@ Add an action to create a wall every 5 seconds. A wall will consist of an upper 
 
 Add a physics body to the Pacman sprite. Add mass and set the gravity for the scene to -2.
 
-Apply impulse to Pacman on a tap, which will give the sprite upward velocity.
+Apply an impulse to Pacman on a tap, which will give the sprite upward velocity.
 
 ### Handle collisions with walls
 
@@ -89,5 +91,7 @@ Add a check to `didBeginContact:` to distinguish between a wall and the boundary
 > Thank you, Mario! But our princess is in another castle
 
 1. Add a "high score" label to show the user's best score so far
-2. Add extra sounds for scoring and the end of the game (included are *pacman_eatfruit.wav* and *pacman_death.wav*).
-3. Add a boundary to the game world to end the game if Pacman goes off the bottom of the screen
+2. Randomize the spacing of walls and the height of the gap.
+4. Experiment with changing gravity and other values to make the game more or less difficult.
+4. Add extra sounds for scoring and the end of the game (included are *pacman_eatfruit.wav* and *pacman_death.wav*).
+5. Add a boundary to the game world to end the game if Pacman goes off the bottom of the screen
