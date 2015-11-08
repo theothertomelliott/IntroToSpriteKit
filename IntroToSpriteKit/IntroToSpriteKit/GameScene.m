@@ -8,38 +8,38 @@
 
 #import "GameScene.h"
 
+@interface GameScene ()
+
+@property (nonatomic) SKSpriteNode *pacMan;
+
+@end
+
 @implementation GameScene
 
 -(void)didMoveToView:(SKView *)view {
-    /* Setup your scene here */
-    SKLabelNode *myLabel = [SKLabelNode labelNodeWithFontNamed:@"Chalkduster"];
+    self.pacMan = [SKSpriteNode spriteNodeWithImageNamed:@"PacmanFrame2"];
+    self.pacMan.position = CGPointMake(CGRectGetMidX(self.frame),
+                                  CGRectGetMidY(self.frame));
+    [self addChild:self.pacMan];
+    self.pacMan.xScale = 1.5;
+    self.pacMan.yScale = 1.5;
     
-    myLabel.text = @"Hello, World!";
-    myLabel.fontSize = 45;
-    myLabel.position = CGPointMake(CGRectGetMidX(self.frame),
-                                   CGRectGetMidY(self.frame));
-    
-    [self addChild:myLabel];
+    self.physicsWorld.gravity = CGVectorMake(0.0, -1.0);
+
+    self.pacMan.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:self.pacMan.size.width/2];
+    self.pacMan.physicsBody.mass = 1.0;
+    self.pacMan.physicsBody.dynamic = YES;
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    /* Called when a touch begins */
+    SKTexture *frame1 = [SKTexture textureWithImageNamed:@"PacmanFrame1"];
+    SKTexture *frame2 = [SKTexture textureWithImageNamed:@"PacmanFrame2"];
+    SKTexture *frame3 = [SKTexture textureWithImageNamed:@"PacmanFrame3"];
     
-    for (UITouch *touch in touches) {
-        CGPoint location = [touch locationInNode:self];
-        
-        SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];
-        
-        sprite.xScale = 0.5;
-        sprite.yScale = 0.5;
-        sprite.position = location;
-        
-        SKAction *action = [SKAction rotateByAngle:M_PI duration:1];
-        
-        [sprite runAction:[SKAction repeatActionForever:action]];
-        
-        [self addChild:sprite];
-    }
+    SKAction *animation = [SKAction animateWithTextures:@[frame1,frame2,frame3,frame2] timePerFrame:0.1];
+    [self.pacMan runAction:animation];
+    
+    [self.pacMan.physicsBody applyImpulse:CGVectorMake(0.0, -self.pacMan.physicsBody.velocity.dy + 150)];
 }
 
 -(void)update:(CFTimeInterval)currentTime {
