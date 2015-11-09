@@ -19,9 +19,14 @@
 
 @property (nonatomic) NSMutableArray<SKSpriteNode *> *walls;
 
+@property (nonatomic) SKAction *wakkaSound;
+
 @end
 
 @implementation GameScene
+
+const int kWallCategory = 1;
+const int kBorderCategory = 1 << 1;
 
 -(void)didMoveToView:(SKView *)view {
     
@@ -44,7 +49,7 @@
                                            CGRectGetHeight(self.frame) - 50);
     [self addChild:self.scoreLabel];
     
-    SKAction *soundAction = [SKAction playSoundFileNamed:@"wakka.mp3" waitForCompletion:YES];
+    self.wakkaSound = [SKAction playSoundFileNamed:@"wakka.mp3" waitForCompletion:YES];
     
 }
 
@@ -65,7 +70,7 @@
     self.pacMan.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:self.pacMan.size.width/2];
     self.pacMan.physicsBody.mass = 1.0;
     self.pacMan.physicsBody.collisionBitMask = 0;
-    self.pacMan.physicsBody.contactTestBitMask = 3;
+    self.pacMan.physicsBody.contactTestBitMask = kWallCategory | kBorderCategory;
     
     SKAction *addWall = [SKAction runBlock:^{
         [self addWall];
@@ -102,7 +107,7 @@
     topWall.yScale = -1;
     
     topWall.physicsBody = [SKPhysicsBody bodyWithTexture:topWall.texture size:topWall.size];
-    topWall.physicsBody.categoryBitMask = 1;
+    topWall.physicsBody.categoryBitMask = kWallCategory;
     topWall.physicsBody.affectedByGravity = NO;
     topWall.physicsBody.dynamic = NO;
     
@@ -117,7 +122,7 @@
     SKSpriteNode *scoreBoundary = [SKSpriteNode spriteNodeWithColor:[UIColor clearColor] size:CGSizeMake(2,CGRectGetHeight(self.frame))];
     scoreBoundary.position = CGPointMake(topWall.size.width/2, 0);
     scoreBoundary.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:scoreBoundary.size];
-    scoreBoundary.physicsBody.categoryBitMask = 2;
+    scoreBoundary.physicsBody.categoryBitMask = kBorderCategory;
     scoreBoundary.physicsBody.affectedByGravity = NO;
     scoreBoundary.physicsBody.dynamic = NO;
 
@@ -133,7 +138,6 @@
     [self.walls addObject:wall];
     SKAction *moveWall = [SKAction moveByX:-10 y:0 duration:0.1];
     [wall runAction:[SKAction repeatActionForever:moveWall]];
-    
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -143,7 +147,7 @@
         return;
     }
     
-    [self runAction:[SKAction playSoundFileNamed:@"wakka.mp3" waitForCompletion:YES]];
+    [self runAction:self.wakkaSound];
     
     SKTexture *frame1 = [SKTexture textureWithImageNamed:@"PacmanFrame1"];
     SKTexture *frame2 = [SKTexture textureWithImageNamed:@"PacmanFrame2"];
