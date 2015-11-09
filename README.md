@@ -14,7 +14,7 @@
 * Get comfortable with the basic concepts of SpriteKit
 * Start building a simple game
 
-## Starter Repo
+## Starter Project
 
 > It's dangerous to go alone, take this
 
